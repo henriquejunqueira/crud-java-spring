@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration // Marca a classe como uma fonte de configurações do Spring
 @EnableWebSecurity // Habilita a segurança da web no projeto
@@ -21,22 +22,33 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            SenhaMasterAuthenticationProvider senhaMasterAuthenticationProvider) throws Exception{
+            SenhaMasterAuthenticationProvider senhaMasterAuthenticationProvider,
+            CustomFilter customFilter) throws Exception{
         // Configura a segurança HTTP, aplicando regras de autorização
         return http
                 // Configura regras de autorização para diferentes requisições HTTP
                 .authorizeHttpRequests(customizer -> {
                     // Permite que requisições para "/public" sejam acessadas por qualquer pessoa, sem autenticação
                     customizer.requestMatchers("/public").permitAll();
+
                     // Exige autenticação para qualquer outra requisição que não seja "/public"
                     customizer.anyRequest().authenticated();
                 })
                 // Habilita a autenticação HTTP Basic, que é um metodo de autenticação simples
                 .httpBasic(Customizer.withDefaults())
+
                 // Habilita a autenticação por formulário com as configurações padrão,
                 // fornecendo uma página de login padrão
                 .formLogin(Customizer.withDefaults())
+
+                // Adiciona o provedor de autenticação personalizado, permitindo que o Spring use a lógica
+                // customizada do SenhaMasterAuthenticationProvider para autenticar usuários.
                 .authenticationProvider(senhaMasterAuthenticationProvider)
+
+                // Coloca um filtro de segurança customizado antes de um filtro específico no encadeamento de
+                // segurança, para processar as requisições de acordo com a lógica personalizada.
+                .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
+
                 .build(); // Constrói a configuração de segurança com todas as regras definidas
     }
 
