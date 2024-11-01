@@ -19,7 +19,9 @@ public class SecurityConfig {
 
     // Define um bean para a cadeia de filtros de segurança, que gerencia a configuração de segurança HTTP
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            SenhaMasterAuthenticationProvider senhaMasterAuthenticationProvider) throws Exception{
         // Configura a segurança HTTP, aplicando regras de autorização
         return http
                 // Configura regras de autorização para diferentes requisições HTTP
@@ -34,6 +36,7 @@ public class SecurityConfig {
                 // Habilita a autenticação por formulário com as configurações padrão,
                 // fornecendo uma página de login padrão
                 .formLogin(Customizer.withDefaults())
+                .authenticationProvider(senhaMasterAuthenticationProvider)
                 .build(); // Constrói a configuração de segurança com todas as regras definidas
     }
 
