@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -30,6 +31,20 @@ public class SecurityConfig {
                 .authorizeHttpRequests(customizer -> {
                     // Permite que requisições para "/public" sejam acessadas por qualquer pessoa, sem autenticação
                     customizer.requestMatchers("/public").permitAll();
+
+                    // role -> Grupo de usuário (perfil de usuário). Ex: Master, gerente, admin, usuario
+                    // authority -> Permissões. Ex: cadastrar usuário, acessar tela de relatório
+
+                    // Permite que requisições para "/private" sejam acessadas apenas por quem tem role "MASTER"
+                    // customizer.requestMatchers("/private").hasRole("MASTER");
+
+                    // Permite que requisições para "/private" sejam acessadas apenas por uma lista de roles
+                    // customizer.requestMatchers("/private").hasAnyRole("MASTER", "USER");
+
+                    // Permite que requisições para "/private" sejam acessadas apenas quem está autorizado
+                    // customizer.requestMatchers("/private").hasAuthority("");
+
+                    customizer.requestMatchers("/admin").hasRole("ADMIN");
 
                     // Exige autenticação para qualquer outra requisição que não seja "/public"
                     customizer.anyRequest().authenticated();
@@ -83,6 +98,14 @@ public class SecurityConfig {
         // Retorna uma instância de BCryptPasswordEncoder, que aplica uma função de hash forte para
         // proteger as senhas
         return new BCryptPasswordEncoder();
+    }
+
+    // Define o prefixo que será utilizado na SenhaMasterAuthenticationProvider em
+    // List.of(new SimpleGrantedAuthority("ROLE_ADMIN")). O nome que for definido em
+    // GrantedAuthorityDefaults será o prefixo, ou posso deixar vazio
+    @Bean
+    public GrantedAuthorityDefaults grantedAuthorityDefaults(){
+        return new GrantedAuthorityDefaults("GRUPO_");
     }
 
 }

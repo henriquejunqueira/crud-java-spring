@@ -24,4 +24,12 @@ public class FooController {
         return ResponseEntity.ok("Private route ok! Usuário conectado: " + authentication.getName());
     }
 
+    // Mapeia a rota "/private" para o metodo privateRoute(), que também responde a requisições HTTP GET
+    @GetMapping("/admin")
+    public ResponseEntity<String> adminRoute(Authentication authentication){
+        // Retorna uma resposta HTTP 200 OK com o corpo "Private route ok!"
+        // e inclui o nome do usuário autenticado obtido através do objeto Authentication
+        return ResponseEntity.ok("Admin route ok!");
+    }
+
 }

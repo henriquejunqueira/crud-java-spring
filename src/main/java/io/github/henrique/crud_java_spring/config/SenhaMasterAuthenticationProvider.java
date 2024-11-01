@@ -36,7 +36,8 @@ public class SenhaMasterAuthenticationProvider implements AuthenticationProvider
             return new UsernamePasswordAuthenticationToken(
                     "Sou Master", // Nome do usuário autenticado
                     null, // Credenciais de senha (neste caso, não são necessárias, então são definidas como null)
-                    List.of(new SimpleGrantedAuthority("ADMIN")) // Lista de autoridades concedidas
+                    //List.of(new SimpleGrantedAuthority("ROLE_ADMIN")) // Lista de autoridades concedidas
+                    List.of(new SimpleGrantedAuthority("GRUPO_ADMIN")) // Lista de autoridades concedidas
             );
         }
 
