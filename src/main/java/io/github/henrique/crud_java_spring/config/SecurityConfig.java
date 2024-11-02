@@ -3,6 +3,7 @@ package io.github.henrique.crud_java_spring.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
@@ -17,6 +18,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration // Marca a classe como uma fonte de configurações do Spring
 @EnableWebSecurity // Habilita a segurança da web no projeto
+
+// permite a configuração de autorização nos controllers removendo-as do securityFilterChain
+@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
     // Define um bean para a cadeia de filtros de segurança, que gerencia a configuração de segurança HTTP
@@ -44,7 +48,7 @@ public class SecurityConfig {
                     // Permite que requisições para "/private" sejam acessadas apenas quem está autorizado
                     // customizer.requestMatchers("/private").hasAuthority("");
 
-                    customizer.requestMatchers("/admin").hasRole("ADMIN");
+                    //customizer.requestMatchers("/admin").hasRole("ADMIN");
 
                     // Exige autenticação para qualquer outra requisição que não seja "/public"
                     customizer.anyRequest().authenticated();

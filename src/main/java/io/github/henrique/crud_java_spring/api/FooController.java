@@ -1,6 +1,7 @@
 package io.github.henrique.crud_java_spring.api;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +27,7 @@ public class FooController {
 
     // Mapeia a rota "/private" para o metodo privateRoute(), que também responde a requisições HTTP GET
     @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')") // define a autorização ao invés de definir no "securityFilterChain"
     public ResponseEntity<String> adminRoute(Authentication authentication){
         // Retorna uma resposta HTTP 200 OK com o corpo "Private route ok!"
         // e inclui o nome do usuário autenticado obtido através do objeto Authentication
