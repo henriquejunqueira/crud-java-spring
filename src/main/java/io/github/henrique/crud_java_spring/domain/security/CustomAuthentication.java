@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class CustomAuthentication implements Authentication {
@@ -13,15 +12,12 @@ public class CustomAuthentication implements Authentication {
     private final IdentificacaoUsuario identificacaoUsuario;
 
     public CustomAuthentication(IdentificacaoUsuario identificacaoUsuario) {
-
         if(identificacaoUsuario == null){
             throw new ExceptionInInitializerError(
                     "Não é possível criar um customAuthentication sem a identificação do usuário!"
             );
         }
-
         this.identificacaoUsuario = identificacaoUsuario;
-
     }
 
     @Override

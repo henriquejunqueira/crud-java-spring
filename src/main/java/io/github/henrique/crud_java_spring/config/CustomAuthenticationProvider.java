@@ -26,10 +26,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String senha = (String) authentication.getCredentials();
 
         Usuario usuario = usuarioService.obterUsuarioComPermissoes(login);
-
         if(usuario != null){
             boolean senhasBatem = passwordEncoder.matches(senha, usuario.getSenha());
-
             if(senhasBatem){
                 IdentificacaoUsuario identificacaoUsuario = new IdentificacaoUsuario(
                         usuario.getId(),
@@ -37,12 +35,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
                         usuario.getLogin(),
                         usuario.getPermissoes()
                 );
-
                 return new CustomAuthentication(identificacaoUsuario);
-
             }
         }
-
         return null;
     }
 

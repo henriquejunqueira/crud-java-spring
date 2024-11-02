@@ -31,13 +31,12 @@ public class UsuarioService {
 
         usuarioRepository.save(usuario);
 
-        List<UsuarioGrupo> listaUsuarioGrupo =grupos.stream().map(nomeGrupo -> {
+        List<UsuarioGrupo> listaUsuarioGrupo = grupos.stream().map(nomeGrupo -> {
            Optional<Grupo> possivelGrupo = grupoRepository.findByNome(nomeGrupo);
            if(possivelGrupo.isPresent()){
                Grupo grupo = possivelGrupo.get();
                return new UsuarioGrupo(usuario, grupo);
            }
-
            return null;
         }).filter(grupo -> grupo != null).collect(Collectors.toList());
 

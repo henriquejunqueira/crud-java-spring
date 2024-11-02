@@ -1,5 +1,7 @@
 package io.github.henrique.crud_java_spring.config;
 
+import io.github.henrique.crud_java_spring.domain.security.CustomAuthentication;
+import io.github.henrique.crud_java_spring.domain.security.IdentificacaoUsuario;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,12 +35,21 @@ public class SenhaMasterAuthenticationProvider implements AuthenticationProvider
 
             // Se as credenciais forem válidas, retorna um token de autenticação com o nome "Sou Master",
             // sem credenciais adicionais, e uma lista de autoridades contendo "ADMIN"
-            return new UsernamePasswordAuthenticationToken(
-                    "Sou Master", // Nome do usuário autenticado
-                    null, // Credenciais de senha (neste caso, não são necessárias, então são definidas como null)
-                    //List.of(new SimpleGrantedAuthority("ROLE_ADMIN")) // Lista de autoridades concedidas
-                    List.of(new SimpleGrantedAuthority("GRUPO_ADMIN")) // Lista de autoridades concedidas
+//            return new UsernamePasswordAuthenticationToken(
+//                    "Sou Master", // Nome do usuário autenticado
+//                    null, // Credenciais de senha (neste caso, não são necessárias, então são definidas como null)
+//                    //List.of(new SimpleGrantedAuthority("ROLE_ADMIN")) // Lista de autoridades concedidas
+//                    List.of(new SimpleGrantedAuthority("GRUPO_ADMIN")) // Lista de autoridades concedidas
+//            );
+
+            IdentificacaoUsuario identificacaoUsuario = new IdentificacaoUsuario(
+                    "Sou Master",
+                    "Master",
+                    loginMaster,
+                    List.of("ADMIN") // aqui é passado o prefixo se existir. Ex: List.of("GRUPO_ADMIN")
             );
+
+            return new CustomAuthentication(identificacaoUsuario);
         }
 
         // Retorna null se as credenciais não forem válidas, indicando falha na autenticação

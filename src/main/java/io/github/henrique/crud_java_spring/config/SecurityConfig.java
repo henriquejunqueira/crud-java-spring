@@ -19,9 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration // Marca a classe como uma fonte de configurações do Spring
 @EnableWebSecurity // Habilita a segurança da web no projeto
-
-// permite a configuração de autorização nos controllers removendo-as do securityFilterChain
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true) // permite a configuração de autorização nos controllers removendo-as do securityFilterChain
 public class SecurityConfig {
 
     // Define um bean para a cadeia de filtros de segurança, que gerencia a configuração de segurança HTTP
@@ -29,6 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
             SenhaMasterAuthenticationProvider senhaMasterAuthenticationProvider,
+            CustomAuthenticationProvider customAuthenticationProvider,
             CustomFilter customFilter) throws Exception{
         // Configura a segurança HTTP, aplicando regras de autorização
         return http
@@ -70,6 +69,8 @@ public class SecurityConfig {
                 // customizada do SenhaMasterAuthenticationProvider para autenticar usuários.
                 .authenticationProvider(senhaMasterAuthenticationProvider)
 
+                .authenticationProvider(customAuthenticationProvider)
+
                 // Coloca um filtro de segurança customizado antes de um filtro específico no encadeamento de
                 // segurança, para processar as requisições de acordo com a lógica personalizada.
                 .addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class)
@@ -82,8 +83,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService(){
 
         // Cria um usuário comum com o nome "user", senha "123" (criptografada), e a role "USER"
-        UserDetails commonUser = User
-                .builder()
+        UserDetails commonUser = User.builder()
                 .username("user") // Define o nome de usuário
                 .password(passwordEncoder().encode("123")) // Define a senha criptografada
                 .roles("USER") // Define o papel (role) como "USER"
@@ -91,8 +91,7 @@ public class SecurityConfig {
 
         // Cria um usuário administrador com o nome "admin", senha "admin" (criptografada),
         // e as roles "USER" e "ADMIN"
-        UserDetails adminUser = User
-                .builder()
+        UserDetails adminUser = User.builder()
                 .username("admin") // Define o nome de usuário
                 .password(passwordEncoder().encode("admin")) // Define a senha criptografada
                 .roles("USER", "ADMIN") // Define os papéis (roles) como "USER" e "ADMIN"
@@ -113,9 +112,10 @@ public class SecurityConfig {
     // Define o prefixo que será utilizado na SenhaMasterAuthenticationProvider em
     // List.of(new SimpleGrantedAuthority("ROLE_ADMIN")). O nome que for definido em
     // GrantedAuthorityDefaults será o prefixo, ou posso deixar vazio
+    // Ex: GrantedAuthorityDefaults("GRUPO_");
     @Bean
     public GrantedAuthorityDefaults grantedAuthorityDefaults(){
-        return new GrantedAuthorityDefaults("GRUPO_");
+        return new GrantedAuthorityDefaults("");
     }
 
 }

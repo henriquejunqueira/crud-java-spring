@@ -1,5 +1,7 @@
 package io.github.henrique.crud_java_spring.config;
 
+import io.github.henrique.crud_java_spring.domain.security.CustomAuthentication;
+import io.github.henrique.crud_java_spring.domain.security.IdentificacaoUsuario;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,17 +21,23 @@ import java.util.List;
 public class CustomFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
+
         String secretHeader = request.getHeader("x-secret");
 
         if(secretHeader != null){
             if (secretHeader.equals("secr3t")) {
-                Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        "Muito secreto",
-                        null,
-                         List.of(new SimpleGrantedAuthority("ADMIN"))
-//                        List.of(new SimpleGrantedAuthority("USER"))
+                var identificacaoUsuario = new IdentificacaoUsuario(
+                        "id-secret",
+                        "Muito Secreto",
+                        "x-secret",
+                        List.of("USER")
                 );
+                Authentication authentication = new CustomAuthentication(identificacaoUsuario);
+
                 SecurityContext securityContext = SecurityContextHolder.getContext();
                 securityContext.setAuthentication(authentication);
             }
