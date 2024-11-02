@@ -6,6 +6,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,6 +32,10 @@ public class SecurityConfig {
             CustomFilter customFilter) throws Exception{
         // Configura a segurança HTTP, aplicando regras de autorização
         return http
+                // Desabilita o filtro csrf que serve apenas para aplicação web, que não é o caso
+                // já que esta é uma API. Esse csrf serve pra proteger os formulários da aplicação web
+                .csrf(AbstractHttpConfigurer::disable)
+
                 // Configura regras de autorização para diferentes requisições HTTP
                 .authorizeHttpRequests(customizer -> {
                     // Permite que requisições para "/public" sejam acessadas por qualquer pessoa, sem autenticação
