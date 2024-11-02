@@ -50,9 +50,10 @@ public class SecurityConfig {
                     // Permite que requisições para "/private" sejam acessadas apenas por uma lista de roles
                     // customizer.requestMatchers("/private").hasAnyRole("MASTER", "USER");
 
-                    // Permite que requisições para "/private" sejam acessadas apenas quem está autorizado
+                    // Permite que requisições para "/private" sejam acessadas apenas por quem está autorizado
                     // customizer.requestMatchers("/private").hasAuthority("");
 
+                    // Permite que requisições para "/admin" sejam acessadas apenas por quem tem role "ADMIN"
                     //customizer.requestMatchers("/admin").hasRole("ADMIN");
 
                     // Exige autenticação para qualquer outra requisição que não seja "/public"
